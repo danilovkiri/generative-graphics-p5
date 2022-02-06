@@ -1,10 +1,15 @@
+/**
+ Copyright Kirill Danilov, 2022
+ danilovkiri@yandex.ru
+**/
+
 const width = 800;
 const height = 800;
 const nLevels = 30;
 const spawnCoef = 3;
 const radiusIncrement = 10;
 const noiseSizePx = 5;
-const closestSearchThreshold = 10;
+const closestSearchThreshold = 2;
 
 class Point {
     constructor(x, y) {

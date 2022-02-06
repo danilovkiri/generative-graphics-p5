@@ -1,6 +1,6 @@
 const width = 800;
 const height = 800;
-const nOfPoints = 500;
+const nOfPoints = 50;
 
 class Point {
     constructor(x, y) {
@@ -188,14 +188,18 @@ let sketch = function (p) {
         p.stroke("black");
         p.strokeWeight(1);
         let pointList = getRandomPoints();
-        console.log(pointList)
         let triangles = bowyerWatson(pointList);
-        console.log(triangles)
         let lines = getVoronoiLines(triangles)
-        console.log(lines)
         lines.forEach(object => {
-            p.line(object[0].x, object[0].y, object[1].x, object[1].y,)
+            p.line(object[0].x, object[0].y, object[1].x, object[1].y)
         })
+
+        p.stroke("red")
+        p.strokeWeight(5);
+        pointList.forEach(object => {
+            p.point(object.x, object.y)
+        })
+
         waiting = false;
     }
 

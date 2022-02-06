@@ -1,7 +1,12 @@
+/**
+ Copyright Kirill Danilov, 2022
+ danilovkiri@yandex.ru
+**/
+
 const width = 800;
 const height = 800;
 const nLevels = 30;
-const spawnCoef = 1;
+const spawnCoef = 3;
 const radiusIncrement = 10;
 const noiseSizePx = 5;
 
@@ -11,8 +16,6 @@ class Point {
         this.y = y;
     }
 }
-
-let graphCenter = new Point(width * 0.5, height * 0.5);
 
 function dist(point1, point2) {
     return Math.hypot(point1.x - point2.x, point1.y - point2.y);
@@ -84,6 +87,7 @@ function main() {
     return edges
 }
 
+let graphCenter = new Point(width * 0.5, height * 0.5);
 
 let sketch = function (p) {
     p.setup = function () {
@@ -98,7 +102,7 @@ let sketch = function (p) {
         p.background("white");
         p.stroke("black");
         p.strokeWeight(1);
-        let edges = main();
+        let edges = main(graphCenter);
         // simple line drawing of the graph
         /**
         edges.forEach(object => {
