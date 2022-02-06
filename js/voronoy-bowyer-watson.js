@@ -1,3 +1,8 @@
+/*
+  Copyright Johan Karlsson, Kirill Danilov, 2022
+  MIT License
+*/
+
 const width = 800;
 const height = 800;
 const nOfPoints = 50;

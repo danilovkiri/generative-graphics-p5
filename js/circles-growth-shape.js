@@ -1,3 +1,8 @@
+/*
+  Copyright Johan Karlsson, Kirill Danilov, 2022
+  MIT License
+*/
+
 let objectArray = [];
 let width = 500;
 let height = 500;

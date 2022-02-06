@@ -9,7 +9,7 @@ Inspirations mostly include [Johan Karlsson](https://codepen.io/DonKarlssonSan) 
 
 ## License
 
-Unlicensed.
+MIT License.
 
 ## Usage
 

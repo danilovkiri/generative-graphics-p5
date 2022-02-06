@@ -1,7 +1,7 @@
-/**
- Copyright Kirill Danilov, 2022
- danilovkiri@yandex.ru
-**/
+/*
+  Copyright Johan Karlsson, Kirill Danilov, 2022
+  MIT License
+*/
 
 const width = 2000;
 const height = 2000;

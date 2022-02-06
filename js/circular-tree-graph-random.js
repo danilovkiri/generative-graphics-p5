@@ -1,7 +1,8 @@
-/**
- Copyright Kirill Danilov, 2022
- danilovkiri@yandex.ru
-**/
+/*
+  Copyright Kirill Danilov, 2022
+  danilovkiri@yandex.ru
+  MIT License
+*/
 
 const width = 800;
 const height = 800;
