@@ -33,3 +33,11 @@ These examples correspond to the code which is either partially or fully origina
 
 ![](./examples/voronoy-cells.png)
 
+### Angled Walkers Triangles
+
+![](./examples/angled-walkers-1.png)
+
+### Angled Walkers Squares
+
+![](./examples/angled-walkers-2.png)
+
