@@ -41,3 +41,7 @@ These examples correspond to the code which is either partially or fully origina
 
 ![](./examples/angled-walkers-2.png)
 
+### Square noise
+
+![](./examples/square-noise.png)
+

@@ -1,13 +1,11 @@
-/*
-  Copyright Johan Karlsson, Kirill Danilov, 2022
-  MIT License
-*/
+let width = 1000;
+let height = 1000;
+let zoom = 200;
+let radialZoom = 1;
+let strength = 30;
+let minSize = 5;
+let lineSpace = 3;
 
-let width = 750;
-let height = 750;
-let lineSpace = 5;
-let strength = 50;
-let zoom = 300;
 
 class Point {
     constructor(x, y) {
@@ -16,29 +14,139 @@ class Point {
     }
 }
 
-function drawLine(simplex, offset) {
-    let points = [];
-    for (let i = 0; i < width; i += 0.1) {
-        let p = calcPoint(simplex, i, offset);
-        points.push(p);
+function circle(r, points)  {
+    let i = 0;
+    const path = [];
+    while (i < points) {
+        const a = (i++ / points) * Math.PI * 2;
+        path.push(new Point(Math.cos(a) * r + width/2, Math.sin(a) * r + height/2));
     }
-    return points;
+    return path;
 }
 
-function calcPoint(simplex, i, r) {
-    let y = r;
-    let x = i;
-    let n = simplex.noise2D(
+function square(size, points)  {
+    // right up
+    let path = []
+    for (let i = 0; i < points/4 ; i += 1) {
+        let x = width/2 + size/2;
+        let y = height/2 + size/2;
+        path.push(new Point(x, y));
+    }
+    // left up
+    for (let i = 0; i < points/4 ; i += 1) {
+        let x = width/2 - size/2;
+        let y = height/2 + size/2;
+        path.push(new Point(x, y));
+    }
+    // left down
+    for (let i = 0; i < points/4 ; i += 1) {
+        let x = width/2 - size/2;
+        let y = height/2 - size/2;
+        path.push(new Point(x, y));
+    }
+    // right down
+    for (let i = 0; i < points/4 ; i += 1) {
+        let x = width/2 + size/2;
+        let y = height/2 - size/2;
+        path.push(new Point(x, y));
+    }
+    return path;
+}
+
+// function square(size, points)  {
+//     let i = 0;
+//     const path = [];
+//     while (i < points) {
+//         const a = (i++ / points) * Math.PI * 2;
+//         const x = Math.cos(a), y = Math.sin(a);
+//         const l =  Math.abs(x) - Math.abs(y) > 0 ?
+//             (size * 0.5) / x * Math.sign(x) :
+//             (size * 0.5) / y * Math.sign(y);
+//         path.push(new Point(x * l + width/2, y * l + height/2))
+//     }
+//     return path;
+// }
+
+function tweenPaths(pathA, pathB, pos) { // pos = 0 PathA, pos = 1 PathB
+    let i = 0;
+    let path = [];
+    while (i < pathA.length) {
+        let A = pathA[i];
+        let B = pathB[i];
+        let x = (B.x - A.x) * pos + A.x;
+        let y = (B.y - A.y) * pos + A.y;
+        path.push(new Point(x, y))
+        i++;
+    }
+    return path
+}
+
+const eCurve = (v, p = 2, vp) =>  v < 0 ? 0 : v > 1 ? 1 : (vp = v ** p) / (vp + (1 - v) ** p);
+
+function getSmoothRectangle(localSize) {
+    let tween = 0.65;
+    let nPoints = 12 * 20;
+    const cir = circle(localSize, nPoints);
+    const sqr = square(localSize * 2, nPoints);
+    let object = tweenPaths(cir, sqr, eCurve(tween));
+    let rightUpper = object.slice(0, 60);
+    let leftUpper = object.slice(60, 120);
+    let leftLower = object.slice(120, 180);
+    let rightLower = object.slice(180, 240);
+    let upper = [];
+    let left = [];
+    let lower = [];
+    let right = [];
+
+    for(let i = 0; i < nPoints; i++) {
+        let x = rightUpper.at(-1).x - i * (rightUpper.at(-1).x - leftUpper.at(0).x) / nPoints
+        let y = rightUpper.at(-1).y - i * (rightUpper.at(-1).y - leftUpper.at(0).y) / nPoints
+        upper.push(new Point(x, y));
+    }
+    for(let i = 0; i < nPoints; i++) {
+        let x = leftUpper.at(-1).x - i * (leftUpper.at(-1).x - leftLower.at(0).x) / nPoints
+        let y = leftUpper.at(-1).y - i * (leftUpper.at(-1).y - leftLower.at(0).y) / nPoints
+        left.push(new Point(x, y));
+    }
+    for(let i = 0; i < nPoints; i++) {
+        let x = leftLower.at(-1).x - i * (leftLower.at(-1).x - rightLower.at(0).x) / nPoints
+        let y = leftLower.at(-1).y - i * (leftLower.at(-1).y - rightLower.at(0).y) / nPoints
+        lower.push(new Point(x, y));
+    }
+    for(let i = 0; i < nPoints; i++) {
+        let x = rightLower.at(-1).x - i * (rightLower.at(-1).x - rightUpper.at(0).x) / nPoints
+        let y = rightLower.at(-1).y - i * (rightLower.at(-1).y - rightUpper.at(0).y) / nPoints
+        right.push(new Point(x, y));
+    }
+    return rightUpper.concat(upper).concat(leftUpper).concat(left).concat(leftLower).concat(lower).concat(rightLower).concat(right)
+}
+
+function getDist(point1, point2) {
+    return Math.hypot(point1.x - point2.x, point1.y - point2.y);
+}
+
+function reCalcPoint(simplex, x, y) {
+    let n = simplex.noise3D(
         x / zoom,
-        y / zoom) * strength;
-    return new Point(x, y + n);
+        y / zoom,
+        minSize / radialZoom) * strength;
+    let xNew = x + n
+    let yNew = y + n
+    return new Point(xNew, yNew)
 }
 
 function main() {
     let objects = [];
     let simplex = new SimplexNoise();
-    for (let i = 1; i < height ; i += lineSpace) {
-        objects.push(drawLine(simplex, i));
+    for (let i = minSize; i < 0.4 * Math.min(width, height) ; i += lineSpace) {
+        let smoothedRectangle = getSmoothRectangle(i);
+        let newObject = [];
+        smoothedRectangle.forEach(point => {
+            let newPoint = reCalcPoint(simplex, point.x, point.y);
+            newObject.push(newPoint)
+        })
+        newObject.push(newObject.at(0))
+        objects.push(newObject)
     }
     return objects
 }
@@ -54,14 +162,14 @@ let sketch = function (p) {
     p.draw = function () {
         p.clear()
         p.background("white");
-        p.stroke("black");
-        p.strokeWeight(1);
-        objectArray = main();
-        objectArray.forEach(object => {
+        let objects = main();
+        objects.forEach(object => {
             for(let i = 0; i < object.length-1; i++) {
+                p.stroke("black");
+                p.strokeWeight(1);
                 p.line(object[i].x, object[i].y, object[i+1].x, object[i+1].y)
             }
-        });
+        })
         waiting = false;
     }
 
@@ -76,6 +184,7 @@ cvs.type = "NORMAL";
 
 // svg = new p5(sketch, "svg_image");
 // svg.type = "SVG";
+
 
 /*
  * A fast javascript implementation of simplex noise by Jonas Wagner

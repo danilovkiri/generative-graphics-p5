@@ -1,7 +1,0 @@
-{
-  "name": "canvas-svg-p5",
-  "version": "1.0.0",
-  "dependencies": {
-    "simplex-noise": "^3.0.1"
-  }
-}
