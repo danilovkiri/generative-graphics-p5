@@ -33,6 +33,10 @@ These examples correspond to the code which is either partially or fully origina
 
 ![](./examples/voronoy-cells.png)
 
+### Voronoy Diagram Cells With Walkers
+
+![](./examples/voronoy-cells-walkers.png)
+
 ### Angled Walkers Triangles
 
 ![](./examples/angled-walkers-1.png)
@@ -41,7 +45,11 @@ These examples correspond to the code which is either partially or fully origina
 
 ![](./examples/angled-walkers-2.png)
 
-### Square noise
+### Square radial noise
 
-![](./examples/square-noise.png)
+![](./examples/square-radial-noise.png)
+
+### Circle radial noise
+
+![](./examples/circle-radial-noise.png)
 

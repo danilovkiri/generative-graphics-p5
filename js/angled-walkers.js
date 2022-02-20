@@ -165,7 +165,6 @@ let sketch = function (p) {
         p.strokeWeight(1);
 
         let paths = getAllPaths();
-        console.log(paths)
         paths.forEach(object => {
             p.line(object[0].x, object[0].y, object[1].x, object[1].y);
         });
